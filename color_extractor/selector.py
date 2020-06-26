@@ -18,6 +18,8 @@ class Selector(Task):
             return self._ratio(k, labels, centers)
         elif s == 'all':
             return centers
+        elif s == '_all_largest':
+            return Selector._all_largest(k, labels, centers)
         else:
             raise ValueError('Unknown strategy {}'.format(s))
 
@@ -40,6 +42,12 @@ class Selector(Task):
         counts = [np.count_nonzero(labels == l) for l in range(k)]
         sort_idx = np.argsort(counts)[::-1]
         return [centers[sort_idx[0]]]
+
+    @staticmethod
+    def _all_largest(k, labels, centers):
+        counts = [np.count_nonzero(labels == l) for l in range(k)]
+        sort_idx = np.argsort(counts)[::-1]
+        return [centers[i] for i in sort_idx]
 
     @staticmethod
     def _default_settings():
